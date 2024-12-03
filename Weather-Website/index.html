@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather App</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #00b4d8, #0077b6);
+            min-height: 100vh;
+        }
+
+        nav {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            backdrop-filter: blur(10px);
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-size: 18px;
+            transition: 0.3s;
+        }
+
+        nav a:hover {
+            color: #caf0f8;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 20px;
+        }
+
+        .search-box {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+
+        .search-box input {
+            flex: 1;
+            padding: 15px;
+            border: none;
+            border-radius: 25px;
+            font-size: 16px;
+            outline: none;
+        }
+
+        .search-box button {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 25px;
+            background: #023e8a;
+            color: white;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .search-box button:hover {
+            background: #03045e;
+        }
+
+        .weather-info {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            color: white;
+            backdrop-filter: blur(10px);
+        }
+
+        .location {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        .date-time {
+            font-size: 16px;
+            color: #caf0f8;
+            margin-bottom: 20px;
+        }
+
+        .temperature {
+            font-size: 48px;
+            margin: 20px 0;
+        }
+
+        .description {
+            font-size: 20px;
+            margin-bottom: 20px;
+        }
+
+        .weather-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+            text-align: left;
+        }
+
+        .detail-item {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 10px;
+            border-radius: 10px;
+        }
+
+        .detail-label {
+            font-size: 14px;
+            color: #caf0f8;
+        }
+
+        .detail-value {
+            font-size: 18px;
+            margin-top: 5px;
+        }
+
+        #weather-icon {
+            font-size: 4em;
+            margin: 0.5rem 0;
+        }
+
+        #temperature {
+            font-size: 2rem;
+            font-weight: bold;
+            margin: 0.5rem 0;
+        }
+
+        .forecast {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .forecast-day {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 15px;
+            text-align: center;
+            min-width: 120px;
+        }
+
+        .alerts {
+            background: rgba(255, 0, 0, 0.1);
+            border-radius: 15px;
+            padding: 15px;
+            margin: 20px 0;
+            color: white;
+            display: none;
+        }
+
+        .dashboard-settings {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 15px;
+            margin: 20px 0;
+            color: white;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 10px;
+        }
+
+        .dashboard-toggle {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 5px;
+        }
+
+        .dashboard-toggle input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        .dashboard-toggle label {
+            cursor: pointer;
+        }
+
+
+        .aqi-info {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 15px;
+            margin: 20px 0;
+            color: white;
+        }
+
+        .aqi-level {
+            font-size: 24px;
+            margin: 10px 0;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 10px;
+            }
+
+            .forecast {
+                justify-content: center;
+            }
+
+            .forecast-day {
+                width: calc(50% - 10px);
+            }
+
+            .weather-details {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <nav>
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="about.html">About Us</a></li>
+            <li><a href="contact.html">Contact Us</a></li>
+        </ul>
+    </nav>
+
+    <div class="container">
+        <div class="search-box">
+            <input type="text" placeholder="Enter city name" id="city-input">
+            <button onclick="searchWeather()">Search</button>
+        </div>
+
+        <div class="alerts" id="weather-alerts">
+            <!-- Weather alerts will appear here -->
+        </div>
+
+        <div class="weather-info">
+            <div class="location" id="location">Loading...</div>
+            <div class="date-time" id="date-time"></div>
+            <div class="weather-icon" id="weather-icon">🌤</div>
+            <div class="temperature" id="temperature">--°C</div>
+            <div class="description" id="description">--</div>
+
+            <div class="weather-details">
+                <div class="detail-item">
+                    <div class="detail-label">Humidity</div>
+                    <div class="detail-value" id="humidity-info">--%</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Wind Speed</div>
+                    <div class="detail-value" id="wind-speed">-- m/s</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Rain Probability</div>
+                    <div class="detail-value" id="rain-prob">--%</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Sunrise</div>
+                    <div class="detail-value" id="sunrise">--:--</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Sunset</div>
+                    <div class="detail-value" id="sunset">--:--</div>
+                </div>
+            </div>
+
+            <div class="forecast" id="forecast">
+                <!-- Forecast data will be inserted here -->
+            </div>
+        </div>
+
+        <div class="aqi-info" id="aqi-container">
+            <h3>Air Quality Index</h3>
+            <div class="aqi-level" id="aqi-level">Loading...</div>
+            <div id="aqi-description"></div>
+        </div>
+
+        <div class="dashboard-settings">
+            <h3 style="grid-column: 1/-1;">Customize Dashboard</h3>
+            <div class="dashboard-toggle">
+                <input type="checkbox" id="show-temp" checked>
+                <label for="show-temp">Temperature</label>
+            </div>
+            <div class="dashboard-toggle">
+                <input type="checkbox" id="show-aqi" checked>
+                <label for="show-aqi">Air Quality</label>
+            </div>
+            <div class="dashboard-toggle">
+                <input type="checkbox" id="show-forecast" checked>
+                <label for="show-forecast">Forecast</label>
+            </div>
+            <div class="dashboard-toggle">
+                <input type="checkbox" id="show-wind" checked>
+                <label for="show-wind">Wind Speed</label>
+            </div>
+            <div class="dashboard-toggle">
+                <input type="checkbox" id="show-humidity" checked>
+                <label for="show-humidity">Humidity</label>
+            </div>
+            <div class="dashboard-toggle">
+                <input type="checkbox" id="show-rain" checked>
+                <label for="show-rain">Rain Probability</label>
+            </div>
+            <div class="dashboard-toggle">
+                <input type="checkbox" id="show-sun" checked>
+                <label for="show-sun">Sunrise/Sunset</label>
+            </div>
+        </div>
+
+        <script>
+            const API_KEY = '7a3842fe71491ff701556386551a2961';
+            const AQI_API_KEY = 'd32fa306d38472c0d3ac082665ca6fa5adda3d5c'; // Updated AQI API key
+
+            function updateDateTime() {
+                const dateTime = new Date().toLocaleString();
+                document.getElementById('date-time').textContent = dateTime;
+            }
+            setInterval(updateDateTime, 1000);
+
+            function getUserLocation() {
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(position => {
+                        getWeatherByCoords(position.coords.latitude, position.coords.longitude);
+                        getAQIData(position.coords.latitude, position.coords.longitude);
+                    }, error => {
+                        console.error(error);
+                        getWeatherByCity('London');
+                    });
+                } else {
+                    getWeatherByCity('London');
+                }
+            }
+
+            async function getWeatherByCoords(lat, lon) {
+                try {
+                    const response = await fetch(
+                        `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=metric`
+                    );
+                    const data = await response.json();
+                    updateWeatherUI(data);
+                    getForecast(lat, lon);
+                    getWeatherAlerts(lat, lon);
+                } catch (error) {
+                    console.error('Error:', error);
+                }
+            }
+
+            async function getWeatherByCity(city) {
+                try {
+                    const response = await fetch(
+                        `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${API_KEY}&units=metric`
+                    );
+                    const data = await response.json();
+                    updateWeatherUI(data);
+                    getForecast(data.coord.lat, data.coord.lon);
+                    getWeatherAlerts(data.coord.lat, data.coord.lon);
+                    getAQIData(data.coord.lat, data.coord.lon);
+                } catch (error) {
+                    console.error('Error:', error);
+                }
+            }
+
+            async function getForecast(lat, lon) {
+                try {
+                    const response = await fetch(
+                        `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=metric`
+                    );
+                    const data = await response.json();
+                    updateForecastUI(data);
+                } catch (error) {
+                    console.error('Error:', error);
+                }
+            }
+
+            async function getWeatherAlerts(lat, lon) {
+                try {
+                    const response = await fetch(
+                        `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&appid=${API_KEY}&exclude=current,minutely,hourly,daily`
+                    );
+                    const data = await response.json();
+                    if (data.alerts && data.alerts.length > 0) {
+                        showWeatherAlerts(data.alerts);
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                }
+            }
+
+            async function getAQIData(lat, lon) {
+                try {
+                    const response = await fetch(
+                        `https://api.waqi.info/feed/geo:${lat};${lon}/?token=${AQI_API_KEY}`
+                    );
+                    const data = await response.json();
+                    if (data.status === 'ok') {
+                        updateAQIUI(data);
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                }
+            }
+
+            function updateWeatherUI(data) {
+                // Temperature
+                const tempElement = document.getElementById('temperature');
+                if (document.getElementById('show-temp').checked) {
+                    tempElement.style.display = 'block';
+                    tempElement.textContent = `${Math.round(data.main.temp)}°C`;
+                } else {
+                    tempElement.style.display = 'none';
+                }
+
+                document.getElementById('location').textContent = `${data.name}, ${data.sys.country}`;
+                document.getElementById('description').textContent = data.weather[0].description;
+                document.getElementById('weather-icon').textContent = getWeatherEmoji(data.weather[0].main);
+
+                // Humidity
+                const humidityElement = document.querySelector('.detail-item:nth-child(1)');
+                if (document.getElementById('show-humidity').checked) {
+                    humidityElement.style.display = 'block';
+                    document.getElementById('humidity-info').textContent = `${data.main.humidity}%`;
+                } else {
+                    humidityElement.style.display = 'none';
+                }
+
+                // Wind Speed
+                const windElement = document.querySelector('.detail-item:nth-child(2)');
+                if (document.getElementById('show-wind').checked) {
+                    windElement.style.display = 'block';
+                    document.getElementById('wind-speed').textContent = `${data.wind.speed} m/s`;
+                } else {
+                    windElement.style.display = 'none';
+                }
+
+                // Rain Probability
+                const rainElement = document.querySelector('.detail-item:nth-child(3)');
+                if (document.getElementById('show-rain').checked) {
+                    rainElement.style.display = 'block';
+                    const rainProb = data.rain ? `${(data.rain['1h'] || 0).toFixed(1)}mm` : '0mm';
+                    document.getElementById('rain-prob').textContent = rainProb;
+                } else {
+                    rainElement.style.display = 'none';
+                }
+
+                // Sunrise/Sunset
+                const sunriseElement = document.querySelector('.detail-item:nth-child(4)');
+                const sunsetElement = document.querySelector('.detail-item:nth-child(5)');
+                if (document.getElementById('show-sun').checked) {
+                    sunriseElement.style.display = 'block';
+                    sunsetElement.style.display = 'block';
+                    const sunrise = new Date(data.sys.sunrise * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                    const sunset = new Date(data.sys.sunset * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                    document.getElementById('sunrise').textContent = sunrise;
+                    document.getElementById('sunset').textContent = sunset;
+                } else {
+                    sunriseElement.style.display = 'none';
+                    sunsetElement.style.display = 'none';
+                }
+            }
+
+            function updateForecastUI(data) {
+                const forecastContainer = document.getElementById('forecast');
+
+                if (!document.getElementById('show-forecast').checked) {
+                    forecastContainer.style.display = 'none';
+                    return;
+                }
+
+                forecastContainer.style.display = 'flex';
+                forecastContainer.innerHTML = '';
+
+                const dailyForecasts = data.list.filter(item => item.dt_txt.includes('12:00:00'));
+                dailyForecasts.slice(0, 7).forEach(day => {
+                    const date = new Date(day.dt * 1000);
+                    const dayName = date.toLocaleDateString('en-US', { weekday: 'short' });
+
+                    const forecastDay = document.createElement('div');
+                    forecastDay.className = 'forecast-day';
+                    forecastDay.innerHTML = `
+            <div>${dayName}</div>
+            <div>${getWeatherEmoji(day.weather[0].main)}</div>
+            <div>${Math.round(day.main.temp)}°C</div>
+        `;
+                    forecastContainer.appendChild(forecastDay);
+                });
+            }
+
+
+            function showWeatherAlerts(alerts) {
+                const alertsContainer = document.getElementById('weather-alerts');
+                alertsContainer.style.display = 'block';
+                alertsContainer.innerHTML = alerts.map(alert => `
+                <div class="alert">
+                    <h4>${alert.event}</h4>
+                    <p>${alert.description}</p>
+                </div>
+            `).join('');
+            }
+
+            function updateAQIUI(data) {
+                if (!document.getElementById('show-aqi').checked) {
+                    document.getElementById('aqi-container').style.display = 'none';
+                    return;
+                }
+
+                document.getElementById('aqi-container').style.display = 'block';
+                const aqi = data.data.aqi;
+                const aqiLevel = document.getElementById('aqi-level');
+                const aqiDescription = document.getElementById('aqi-description');
+
+                aqiLevel.textContent = `AQI: ${aqi}`;
+
+                if (aqi <= 50) {
+                    aqiDescription.textContent = 'Good';
+                } else if (aqi <= 100) {
+                    aqiDescription.textContent = 'Moderate';
+                } else if (aqi <= 150) {
+                    aqiDescription.textContent = 'Unhealthy for Sensitive Groups';
+                } else {
+                    aqiDescription.textContent = 'Unhealthy';
+                }
+            }
+
+            function getWeatherEmoji(weather) {
+                const emojis = {
+                    'Clear': '☀️',
+                    'Clouds': '☁️',
+                    'Rain': '🌧',
+                    'Snow': '❄️',
+                    'Thunderstorm': '⛈',
+                    'Drizzle': '🌦',
+                    'Mist': '🌫',
+                };
+                return emojis[weather] || '🌤';
+            }
+
+            function searchWeather() {
+                const city = document.getElementById('city-input').value;
+                if (city) {
+                    getWeatherByCity(city);
+                }
+            }
+
+            // Add event listeners for all checkboxes
+            document.getElementById('show-temp').addEventListener('change', refreshWeather);
+            document.getElementById('show-aqi').addEventListener('change', refreshWeather);
+            document.getElementById('show-forecast').addEventListener('change', refreshWeather);
+            document.getElementById('show-wind').addEventListener('change', refreshWeather);
+            document.getElementById('show-humidity').addEventListener('change', refreshWeather);
+            document.getElementById('show-rain').addEventListener('change', refreshWeather);
+            document.getElementById('show-sun').addEventListener('change', refreshWeather);
+
+            function refreshWeather() {
+                const location = document.getElementById('location').textContent.split(',')[0];
+                getWeatherByCity(location);
+            };
+
+            getUserLocation();
+        </script>
+</body>
+
+</html>

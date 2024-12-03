@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us - Weather App</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #00b4d8, #0077b6);
+            min-height: 100vh;
+        }
+
+        nav {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            backdrop-filter: blur(10px);
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-size: 18px;
+            transition: 0.3s;
+        }
+
+        nav a:hover {
+            color: #caf0f8;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            color: white;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        p {
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .offer-container {
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.2); /* Slightly transparent white background */
+            border-radius: 15px;
+            margin-top: 20px;
+        }
+
+        .offer-title {
+            font-size: 19px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .offer-list {
+            list-style-type: disc; /* Bullet points */
+            margin-left: 20px; /* Indent the list */
+            margin-bottom: 15px;
+        }
+
+        .offer-list li {
+            margin-bottom: 5px; /* Add spacing between list items */
+        }
+
+        .team {
+            font-size: 19px;
+            font-weight: bold;
+            margin-top: 10px; /* Add space above the summary */
+            margin-bottom: 7px;
+        }
+        
+        .team-names {
+            font-size: 16px;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                margin: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <nav>
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="about.html">About Us</a></li>
+            <li><a href="contact.html">Contact Us</a></li>
+        </ul>
+    </nav>
+
+    <div class="container">
+        <h1>About Us</h1>
+        <p>Welcome to our Weather Website! We are dedicated to providing you with accurate and reliable weather updates. Our mission is to deliver easy-to-access, real-time weather information to help you plan your day.</p>
+
+        <div class="offer-container">
+            <h2 class="offer-title">What We Offer:</h2>
+            <ul class="offer-list">
+                <li><strong>Detailed Weather Forecasts:</strong> Get precise five-day weather predictions to help plan your activities efficiently.</li>
+                <li><strong>Air Quality Insights:</strong> Access real-time AQI updates for better health and environmental awareness.</li>
+                <li><strong>Customizable Dashboard:</strong> Personalize your experience by selecting the information you wish to see.</li>
+                <li><strong>Reliable Data Sources:</strong> We use trusted meteorological and environmental services to ensure accuracy.</li>
+            </ul>
+            <div class="team"><strong>Our Team:</strong></div>
+            <div class="team-names">  <li> Lakshan Kumar</li>
+                    <li>Armaan Khanna</li>
+                        <li> Rishabh Karani</li>
+                            <li> Muhamed Mishaal</li>
+                            <div class="team-names"></div>
+        </div>
+    </div>
+</body>
+
+</html>
